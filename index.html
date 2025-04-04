@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SaiVortex - Home</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+    font-family: 'Poppins', sans-serif;
+    background: #f0f4f8;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    }
+
+
+    .background-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 20%, rgba(0, 230, 118, 0.15), transparent),
+                  radial-gradient(circle at 80% 80%, rgba(0, 184, 148, 0.15), transparent);
+      z-index: -1;
+    }
+
+    nav {
+      background: linear-gradient(90deg, #00b894, #00cec9);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+
+    nav ul {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #222;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 6rem 1rem 4rem;
+      flex: 1; /* Ensures content expands, pushing footer down */
+
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      color: #1e40af;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .hero p {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      color: #555;
+    }
+
+    .cta-buttons {
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .cta-buttons a {
+      background: #00b894;
+      color: white;
+      padding: 0.8rem 1.6rem;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .cta-buttons a:hover {
+      background: #00a383;
+      transform: translateY(-2px);
+    }
+
+    footer {
+  text-align: center;
+  background: linear-gradient(90deg, #00b894, #00cec9);
+  color: white;
+  padding: 1rem;
+  font-size: 0.95rem;
+  margin-top: auto;
+}
+
+    /* Responsive Menu Styles */
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      nav ul {
+        flex-direction: column;
+        width: 100%;
+        display: none;
+        margin-top: 1rem;
+        background-color: #00b894;
+        border-radius: 8px;
+        padding: 1rem;
+      }
+
+      nav ul.show {
+        display: flex;
+      }
+
+      nav ul li {
+        margin-bottom: 0.8rem;
+      }
+
+      .hero h1 {
+        font-size: 2.3rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+        padding: 0 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+
+      .hero p {
+        font-size: 0.95rem;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      .cta-buttons a {
+        font-size: 1rem;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background-overlay"></div>
+
+  <nav>
+    <div class="logo">SaiVortex</div>
+    <div class="menu-toggle" id="menu-toggle">☰</div>
+    <ul id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="introduction.html">Introduction</a></li>
+      <li><a href="game.html">Play Game</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <h1>Welcome to Tic Tac Toe</h1>
+    <p>Uncover the brilliance of unbeatable artificial intelligence through the Minimax Algorithm. Understand the strategy, view simulations, and experience the game first-hand!</p>
+    <div class="cta-buttons">
+      <a href="introduction.html">Learn More</a>
+      <a href="game.html">Play Now</a>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2025 SaiVortex | Designed with ❤️ and logic | saivortex@example.com
+  </footer>
+
+  <script>
+    const menuToggle = document.getElementById("menu-toggle");
+    const navLinks = document.getElementById("nav-links");
+
+    menuToggle.addEventListener("click", () => {
+      navLinks.classList.toggle("show");
+      menuToggle.textContent = navLinks.classList.contains("show") ? "✕" : "☰";
+    });
+  </script>
+</body>
+</html>

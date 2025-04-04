@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Introduction - Minimax Algorithm</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: #e8f5e9;
+    }
+
+    nav {
+      background: linear-gradient(90deg, #00b894, #00cec9);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-links li a:hover {
+      color: #222;
+    }
+
+    main {
+      flex: 1;
+      padding: 3rem 1.5rem;
+      max-width: 1000px;
+      margin: auto;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #00695c;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      font-size: 1.8rem;
+      color: #00796b;
+    }
+
+    p, ul {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-top: 1rem;
+      color: #333;
+    }
+
+    pre {
+      background: #f1f8e9;
+      padding: 1rem;
+      border-left: 4px solid #00b894;
+      margin-top: 1rem;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+
+    table, th, td {
+      border: 1px solid #00b894;
+    }
+
+    th {
+      background: #00b894;
+      color: white;
+      padding: 10px;
+    }
+
+    td {
+      padding: 10px;
+      text-align: center;
+    }
+
+    footer {
+      text-align: center;
+      background: linear-gradient(90deg, #00b894, #00cec9);
+      color: white;
+      padding: 1rem;
+      margin-top: auto;
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        width: 100%;
+        display: none;
+        padding-top: 1rem;
+        background-color: #00b894;
+        border-radius: 8px;
+        padding: 1rem;
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .nav-links li {
+        margin: 0.5rem 0;
+      }
+
+      main {
+        padding: 2rem 1rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      p, ul, table {
+        font-size: 1rem;
+      }
+
+      th, td {
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">SaiVortex</div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="introduction.html">Introduction</a></li>
+      <li><a href="game.html">Play Game</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <h1>Understanding the Minimax Algorithm</h1>
+    <p>The <strong>Minimax algorithm</strong> is a cornerstone of <strong>artificial intelligence (AI)</strong> in game theory, designed to make optimal decisions in <strong>turn-based games</strong> like <strong>Tic Tac Toe, Chess, and Checkers</strong>. It operates by evaluating possible game moves and choosing the best one to minimize potential losses while maximizing gains.</p>
+
+    <h2>How Does It Work?</h2>
+    <p>Minimax systematically explores all possible moves, assigning <strong>numerical values</strong> based on their potential impact on the game outcome. The AI then selects the move with the <strong>best possible result</strong>, ensuring an <strong>optimal strategy</strong> against an opponent.</p>
+
+    <h2>Why Is It Important?</h2>
+    <p>In the context of <strong>Tic Tac Toe</strong>, an AI utilizing Minimax never loses—if played optimally, it <strong>either wins or forces a draw</strong>. This makes it a powerful tool in AI-driven decision-making, ensuring strategic play in various applications beyond gaming.</p>
+
+    <h2>Step 1: Understanding Game Trees</h2>
+    <p>Minimax works by constructing a <strong>game tree</strong>, which is a diagram of all possible moves. Here’s an example of a simplified Tic Tac Toe game tree:</p>
+    <pre>
+        [ Current Board ]
+          /       |       \
+        X1       X2       X3   (Possible Moves)
+       /  \     /  \     /  \
+      O1  O2   O3  O4   O5  O6  (Opponent's Moves)
+     / \  / \  / \  / \  / \  / \
+    X7 X8 X9 X10 X11 X12 X13 X14 X15  (Next Possible Moves)
+    </pre>
+
+    <h2>Step 2: Assigning Scores to Outcomes</h2>
+    <p>Minimax assigns scores based on whether a move leads to a <strong>win, loss, or draw</strong>:</p>
+    <table>
+      <tr><th>Move</th><th>AI's Score</th></tr>
+      <tr><td>AI Wins 🎉</td><td><strong>+10</strong></td></tr>
+      <tr><td>Opponent Wins 😢</td><td><strong>-10</strong></td></tr>
+      <tr><td>Draw ⚖</td><td><strong>0</strong></td></tr>
+    </table>
+
+    <h2>Step 3: AI Makes the Best Move</h2>
+    <p>The algorithm works <strong>backward</strong>, selecting the move that <strong>maximizes</strong> AI’s advantage and <strong>minimizes</strong> the opponent’s best chance of winning. This is called the <strong>Minimax Strategy</strong>:</p>
+    <ul>
+      <li>AI chooses the move that maximizes its score.</li>
+      <li>Opponent chooses the move that minimizes AI’s advantage.</li>
+      <li>AI anticipates all possible moves to ensure the best outcome.</li>
+    </ul>
+
+    <pre>
+    AI's Turn (Maximizing)
+      ├── Move A (Score: -10 ❌)
+      ├── Move B (Score: 0 ⚖)
+      └── Move C (Score: +10 ✅)
+    </pre>
+    <p>✔ <strong>AI picks Move C because it leads to the best score!</strong></p>
+  </main>
+
+  <footer>
+    &copy; 2025 SaiVortex | All Rights Reserved
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.querySelector('.nav-links').classList.toggle('show');
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tia Tac Toe - Minimax AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: #f9f9f9;
+      position: relative;
+      padding-bottom: 60px;
+    }
+
+    .background-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 20%, rgba(0, 230, 118, 0.15), transparent),
+                  radial-gradient(circle at 80% 80%, rgba(0, 184, 148, 0.15), transparent);
+      z-index: -1;
+    }
+
+    header, section, footer {
+      max-width: 560px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    header h1 {
+      color: #00b894;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 2.5em;
+    }
+
+    .logo {
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            width: 200px; 
+        }
+
+    .fab {
+    position: fixed;
+    top: 3vh;
+    right: 3vw;
+    background-color: #00b894;
+    color: white;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 1em;
+    border-radius: 50%;
+    text-decoration: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: background 0.3s, transform 0.3s;
+    z-index: 1000;
+    }
+
+    .fab:hover {
+    background-color: #019875;
+    transform: scale(1.1);
+    }
+
+    /* Medium Devices */
+    @media (max-width: 768px) {
+    .fab {
+        top: 2vh;
+        right: 2vw;
+        font-size: 1.2rem;
+        padding: 0.9em;
+    }
+    }
+
+    /* Small Devices */
+    @media (max-width: 480px) {
+    .fab {
+        top: 1.5vh;
+        right: 1.5vw;
+        font-size: 1rem;
+        padding: 0.8em;
+    }
+    }
+
+
+    section {
+      background: #fff;
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    section h2 {
+      color: #2d3436;
+      margin-bottom: 10px;
+      font-size: 1.6em;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      justify-content: center;
+      margin: 20px auto;
+      max-width: 300px;
+    }
+
+    .cell {
+      width: 100px;
+      height: 100px;
+      font-size: 2.5em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f1f1f1;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+      user-select: none;
+    }
+
+    .cell:hover {
+      background: #e0e0e0;
+      transform: scale(1.05);
+    }
+
+    .status {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 1.2em;
+      color: #2d3436;
+    }
+
+    .btn-restart {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .btn-restart button {
+      padding: 10px 20px;
+      background: #00b894;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .btn-restart button:hover {
+      background: #019875;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.9em;
+      color: #666;
+      padding: 20px 10px;
+    }
+
+    @media (max-width: 600px) {
+      .cell {
+        width: 80px;
+        height: 80px;
+        font-size: 2em;
+      }
+
+      header h1 {
+        font-size: 2em;
+      }
+    }
+  </style>
+</head>
+<body>
+    <img src="/scr/logo.png" alt="Logo" class="logo">
+  <div class="background-overlay"></div>
+  <header>
+    <h1>Tic Tac Toe: Minimax AI</h1>
+  </header>
+  <a href="index.html" class="fab" title="Go Home">🏠</a>
+  <section id="game">
+    <h2>Play Against AI</h2>
+    <div class="board" id="board"></div>
+    <div class="status" id="status">Tia's Turn (X)</div>
+    <div class="btn-restart"><button onclick="startGame()">Restart Game</button></div>
+  </section>
+
+  <footer>
+    Created by Saicharan • Learn AI through Games 💡
+  </footer>
+
+  <script>
+    const boardElement = document.getElementById('board');
+    const statusElement = document.getElementById('status');
+    let board = ["", "", "", "", "", "", "", "", ""];
+    let isTiaTurn = true;
+    const human = "X";
+    const ai = "O";
+
+    function startGame() {
+      board = ["", "", "", "", "", "", "", "", ""];
+      isTiaTurn = true;
+      statusElement.textContent = "Tia's Turn (X)";
+      render();
+    }
+
+    function render() {
+      boardElement.innerHTML = "";
+      board.forEach((cell, index) => {
+        const div = document.createElement('div');
+        div.classList.add('cell');
+        div.textContent = cell;
+        div.addEventListener('click', () => makeMove(index));
+        boardElement.appendChild(div);
+      });
+    }
+
+    function makeMove(index) {
+      if (board[index] || checkWinner(board)) return;
+      board[index] = human;
+      isTiaTurn = false;
+      render();
+      if (!checkWinner(board) && board.includes("")) {
+        statusElement.textContent = "Toc's Turn (O)";
+        setTimeout(() => {
+          const bestMove = minimax(board, ai).index;
+          board[bestMove] = ai;
+          isTiaTurn = true;
+          render();
+          const winner = checkWinner(board);
+          statusElement.textContent = winner ? `${winner} wins!` : board.includes("") ? "Tia's Turn (X)" : "Draw!";
+        }, 500);
+      } else {
+        const winner = checkWinner(board);
+        statusElement.textContent = winner ? `${winner} wins!` : "Draw!";
+      }
+    }
+
+    function checkWinner(b) {
+      const winPatterns = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      for (let pattern of winPatterns) {
+        const [a,b,c] = pattern;
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+          return board[a];
+        }
+      }
+      return null;
+    }
+
+    function minimax(newBoard, player) {
+      const availSpots = newBoard.map((val, idx) => val === "" ? idx : null).filter(val => val !== null);
+
+      if (checkWinner(newBoard) === human) return { score: -1 };
+      if (checkWinner(newBoard) === ai) return { score: 1 };
+      if (availSpots.length === 0) return { score: 0 };
+
+      const moves = [];
+      for (let i = 0; i < availSpots.length; i++) {
+        const move = {};
+        move.index = availSpots[i];
+        newBoard[availSpots[i]] = player;
+
+        if (player === ai) {
+          const result = minimax(newBoard, human);
+          move.score = result.score;
+        } else {
+          const result = minimax(newBoard, ai);
+          move.score = result.score;
+        }
+
+        newBoard[availSpots[i]] = "";
+        moves.push(move);
+      }
+
+      let bestMove;
+      if (player === ai) {
+        let bestScore = -Infinity;
+        for (let i = 0; i < moves.length; i++) {
+          if (moves[i].score > bestScore) {
+            bestScore = moves[i].score;
+            bestMove = i;
+          }
+        }
+      } else {
+        let bestScore = Infinity;
+        for (let i = 0; i < moves.length; i++) {
+          if (moves[i].score < bestScore) {
+            bestScore = moves[i].score;
+            bestMove = i;
+          }
+        }
+      }
+
+      return moves[bestMove];
+    }
+
+    startGame();
+  </script>
+</body>
+</html>
